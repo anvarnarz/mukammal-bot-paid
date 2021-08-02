@@ -1,0 +1,2 @@
+aiogram~=2.14
+environs~=8.0.0
