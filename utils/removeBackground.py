@@ -6,7 +6,7 @@ url = "https://background-removal.p.rapidapi.com/remove"
 headers = {
     'content-type': "application/x-www-form-urlencoded",
     'x-rapidapi-host': "background-removal.p.rapidapi.com",
-    'x-rapidapi-key': "649dd70b37msh2c6fb644c0956efp1aace9jsnb9712c567a60"
+    'x-rapidapi-key': "SIZNING_API_KALITINGIZ"
     }
 # test payload
 # payload = "image_url=https%3A%2F%2Fobjectcut.com%2Fassets%2Fimg%2Fraven.jpg"
