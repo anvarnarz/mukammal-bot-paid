@@ -2,6 +2,7 @@ from aiogram import types
 from aiogram.dispatcher.filters import Command
 from aiogram.types import InputFile
 
+from keyboards.inline.buy_book import book_keys
 from loader import dp, bot
 
 
@@ -16,12 +17,11 @@ async def get_file_id_v(message: types.Message):
 @dp.message_handler(Command("kitob"))
 async def send_book(message: types.Message):
     photo_id = "AgACAgUAAxkBAAIHUWErOgOL_YUiW1bawxdvEJM8mUd9AAK4rDEbXltZVRPBqDf39UdmAQADAgADeQADIAQ"
-    photo_url = "https://kitoblardunyosi.uz/image/cache/catalog/001-Kitoblar/003_boshqalar/006_ilmiy_ommabop/python-3d-web-500x500h.jpg"
-    photo_file = InputFile(path_or_bytesio="photos/kitob.jpg")
-    await message.reply_photo(photo_file, caption="Dasturlash asoslari kitobi. \n Narxi: 50000 so'm")
-    await message.answer_photo(photo_id, caption="Dasturlash asoslari kitobi. \n Narxi: 50000 so'm")
-    await bot.send_photo(chat_id=message.from_user.id,photo=photo_url,
-                         caption="Dasturlash asoslari kitobi. \nNarxi: 50000 so'm")
+    msg = "<b>Pythonda Dasturlash Asoslari</b> kitobi.\n"
+    msg += "Narxi: 50000 so'm\n\n"
+    msg += "<b>Kitob quyidagi do'konlarda sotiladi:</b>\n👉Akademnashr\n👉Hilol nashr\n👉Azon kitoblar\n👉Kitoblar dunyosi"
+    await message.reply_photo(photo_id, caption=msg, reply_markup=book_keys)
+
 
 @dp.message_handler(Command("kurslar"))
 async def send_courses(message: types.Message):
