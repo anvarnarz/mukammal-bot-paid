@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher.filters import Command
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
+from data.config import ADMINS
 
 from loader import dp, bot
 from data.products import python_book, ds_praktikum,  FAST_SHIPPING, REGULAR_SHIPPING, PICKUP_SHIPPING
@@ -36,20 +37,28 @@ async def show_invoices(message: types.Message):
     await message.answer_photo(photo="https://i.imgur.com/vRN7PBT.jpg",
                          caption=caption, reply_markup=build_keyboard("praktikum"))
 
+@dp.message_handler(Command("mahsulotlar"))
+async def book_invoice(message: Message):
+    await bot.send_invoice(chat_id=message.from_user.id,
+                           **python_book.generate_invoice(),
+                           payload="123456")
+    await bot.send_invoice(chat_id=message.from_user.id,
+                           **ds_praktikum.generate_invoice(),
+                           payload="123457")
 
 @dp.callback_query_handler(text="product:book")
 async def book_invoice(call: CallbackQuery):
     await bot.send_invoice(chat_id=call.from_user.id,
                            **python_book.generate_invoice(),
-                           payload="123456")
+                           payload="payload:kitob")
     await call.answer()
 
 
 @dp.callback_query_handler(text="product:praktikum")
-async def book_invoice(call: CallbackQuery):
+async def praktikum_invoice(call: CallbackQuery):
     await bot.send_invoice(chat_id=call.from_user.id,
                            **ds_praktikum.generate_invoice(),
-                           payload="123457")
+                           payload="payload:praktikum")
     await call.answer()
 
 
@@ -75,3 +84,8 @@ async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery)
                                         ok=True)
     await bot.send_message(chat_id=pre_checkout_query.from_user.id,
                            text="Xaridingiz uchun rahmat!")
+    await bot.send_message(chat_id=ADMINS[0],
+                           text=f"Quyidagi mahsulot sotildi: {pre_checkout_query.invoice_payload}\n"
+                                f"ID: {pre_checkout_query.id}\n"
+                                f"Telegram user: {pre_checkout_query.from_user.first_name}\n"                                
+                                f"Xaridor: {pre_checkout_query.order_info.name}, tel: {pre_checkout_query.order_info.phone_number}")
