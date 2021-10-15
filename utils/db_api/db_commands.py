@@ -83,3 +83,56 @@ class Database:
 
     async def drop_users(self):
         await self.execute("DROP TABLE Users", execute=True)
+
+    ### Mahsulotlar uchun jadval (table) yaratamiz
+    async def create_table_products(self):
+        sql = """
+        CREATE TABLE IF NOT EXISTS Products (
+        id SERIAL PRIMARY KEY,
+        
+        -- Mahsulot kategoriyasi
+        category_code VARCHAR(20) NOT NULL,
+        category_name VARCHAR(50) NOT NULL,
+        
+        -- Mahsulot kategoriya ichida ketgoriyasi ("Go'sht"->"Mol go'shti")
+        subcategory_code VARCHAR(20) NOT NULL,
+        subcategory_name VARCHAR(50) NOT NULL,
+        
+        -- Mahsulot haqida malumot
+        productname VARCHAR(50) NOT NULL,
+        photo varchar(255) NULL,
+        price INT NOT NULL, 
+        description VARCHAR(3000) NULL
+        );
+        """
+        await self.execute(sql, execute=True)
+
+    async def add_product(self, category_code, category_name, subcategory_code, subcategory_name, productname, photo=None, price=None, description=""):
+        sql = "INSERT INTO Products (category_code, category_name, subcategory_code, subcategory_name, productname, photo, price, description) VALUES($1, $2, $3, $4, $5, $6, $7, $8) returning *"
+        return await self.execute(sql, category_code, category_name, subcategory_code, subcategory_name, productname, photo, price, description, fetchrow=True)
+
+    async def get_categories(self):
+        sql = "SELECT DISTINCT category_name, category_code FROM Products"
+        return await self.execute(sql, fetch=True)
+
+    async def get_subcategories(self, category_code):
+        sql = f"SELECT DISTINCT subcategory_name, subcategory_code FROM Products WHERE category_code='{category_code}'"
+        return await self.execute(sql, fetch=True)
+
+    async def count_products(self, category_code, subcategory_code=None):
+        if subcategory_code:
+            sql = f"SELECT COUNT(*) FROM Products WHERE category_code='{category_code}' AND subcategory_code='{subcategory_code}'"
+        else:
+            sql = f"SELECT COUNT(*) FROM Products WHERE category_code='{category_code}'"
+        return await self.execute(sql, fetchval=True)
+
+    async def get_products(self,category_code,subcategory_code):
+        sql = f"SELECT * FROM Products WHERE category_code='{category_code}' AND subcategory_code='{subcategory_code}'"
+        return await self.execute(sql, fetch=True)
+
+    async def get_product(self,product_id):
+        sql = f"SELECT * FROM Products WHERE id={product_id}"
+        return await self.execute(sql, fetchrow=True)
+
+    async def drop_products(self):
+        await self.execute("DROP TABLE Products", execute=True)
