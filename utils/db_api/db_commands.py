@@ -6,8 +6,8 @@ from asyncpg.pool import Pool
 
 from data import config
 
-class Database:
 
+class Database:
     def __init__(self):
         self.pool: Union[Pool, None] = None
 
@@ -16,15 +16,18 @@ class Database:
             user=config.DB_USER,
             password=config.DB_PASS,
             host=config.DB_HOST,
-            database=config.DB_NAME
+            database=config.DB_NAME,
         )
 
-    async def execute(self, command, *args,
-                      fetch: bool = False,
-                      fetchval: bool = False,
-                      fetchrow: bool = False,
-                      execute: bool = False
-                      ):
+    async def execute(
+        self,
+        command,
+        *args,
+        fetch: bool = False,
+        fetchval: bool = False,
+        fetchrow: bool = False,
+        execute: bool = False,
+    ):
         async with self.pool.acquire() as connection:
             connection: Connection
             async with connection.transaction():
@@ -51,10 +54,9 @@ class Database:
 
     @staticmethod
     def format_args(sql, parameters: dict):
-        sql += " AND ".join([
-            f"{item} = ${num}" for num, item in enumerate(parameters.keys(),
-                                                          start=1)
-        ])
+        sql += " AND ".join(
+            [f"{item} = ${num}" for num, item in enumerate(parameters.keys(), start=1)]
+        )
         return sql, tuple(parameters.values())
 
     async def add_user(self, full_name, username, telegram_id):
@@ -107,9 +109,30 @@ class Database:
         """
         await self.execute(sql, execute=True)
 
-    async def add_product(self, category_code, category_name, subcategory_code, subcategory_name, productname, photo=None, price=None, description=""):
+    async def add_product(
+        self,
+        category_code,
+        category_name,
+        subcategory_code,
+        subcategory_name,
+        productname,
+        photo=None,
+        price=None,
+        description="",
+    ):
         sql = "INSERT INTO Products (category_code, category_name, subcategory_code, subcategory_name, productname, photo, price, description) VALUES($1, $2, $3, $4, $5, $6, $7, $8) returning *"
-        return await self.execute(sql, category_code, category_name, subcategory_code, subcategory_name, productname, photo, price, description, fetchrow=True)
+        return await self.execute(
+            sql,
+            category_code,
+            category_name,
+            subcategory_code,
+            subcategory_name,
+            productname,
+            photo,
+            price,
+            description,
+            fetchrow=True,
+        )
 
     async def get_categories(self):
         sql = "SELECT DISTINCT category_name, category_code FROM Products"
@@ -126,11 +149,11 @@ class Database:
             sql = f"SELECT COUNT(*) FROM Products WHERE category_code='{category_code}'"
         return await self.execute(sql, fetchval=True)
 
-    async def get_products(self,category_code,subcategory_code):
+    async def get_products(self, category_code, subcategory_code):
         sql = f"SELECT * FROM Products WHERE category_code='{category_code}' AND subcategory_code='{subcategory_code}'"
         return await self.execute(sql, fetch=True)
 
-    async def get_product(self,product_id):
+    async def get_product(self, product_id):
         sql = f"SELECT * FROM Products WHERE id={product_id}"
         return await self.execute(sql, fetchrow=True)
 

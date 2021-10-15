@@ -6,5 +6,5 @@ menu = ReplyKeyboardMarkup(
             KeyboardButton(text="Bosh menyu"),
         ],
     ],
-    resize_keyboard=True
+    resize_keyboard=True,
 )

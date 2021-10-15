@@ -3,10 +3,14 @@ from typing import Union
 from aiogram import types
 from aiogram.types import CallbackQuery, Message
 
-from keyboards.inline.menu_keyboards import menu_cd, categories_keyboard, subcategories_keyboard, \
-    items_keyboard, item_keyboard
+from keyboards.inline.menu_keyboards import (
+    menu_cd,
+    categories_keyboard,
+    subcategories_keyboard,
+    items_keyboard,
+    item_keyboard,
+)
 from loader import dp, db
-
 
 
 # Bosh menyu matni uchun handler
@@ -14,6 +18,7 @@ from loader import dp, db
 async def show_menu(message: types.Message):
     # Foydalanuvchilarga barcha kategoriyalarni qaytaramiz
     await list_categories(message)
+
 
 # Kategoriyalarni qaytaruvchi funksiya. Callback query yoki Message qabul qilishi ham mumkin.
 # **kwargs yordamida esa boshqa parametrlarni ham qabul qiladi: (category, subcategory, item_id)
@@ -53,7 +58,7 @@ async def show_item(callback: CallbackQuery, category, subcategory, item_id):
     # Mahsulot haqida ma'lumotni bazadan olamiz
     item = await db.get_product(item_id)
 
-    if item['photo']:
+    if item["photo"]:
         text = f"<a href=\"{item['photo']}\">{item['productname']}</a>\n\n"
     else:
         text = f"{item['productname']}\n\n"
@@ -87,7 +92,7 @@ async def navigate(call: CallbackQuery, callback_data: dict):
         "0": list_categories,  # Kategoriyalarni qaytaramiz
         "1": list_subcategories,  # Ost-kategoriyalarni qaytaramiz
         "2": list_items,  # Mahsulotlarni qaytaramiz
-        "3": show_item  # Mahsulotni ko'rsatamiz
+        "3": show_item,  # Mahsulotni ko'rsatamiz
     }
 
     # Foydalanuvchidan kelgan Level qiymatiga mos funksiyani chaqiramiz
@@ -95,8 +100,5 @@ async def navigate(call: CallbackQuery, callback_data: dict):
 
     # Tanlangan funksiyani chaqiramiz va kerakli parametrlarni uzatamiz
     await current_level_function(
-        call,
-        category=category,
-        subcategory=subcategory,
-        item_id=item_id
+        call, category=category, subcategory=subcategory, item_id=item_id
     )
