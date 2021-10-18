@@ -26,8 +26,8 @@ class Product(models.Model):
     def __str__(self):
         return f"№{self.id} - {self.productname}"
 
-class Cart(models.Model):
-    id = models.AutoField(primary_key=True)
-    buyer = models.ForeignKey(User)
-    item_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-    phone_number = models.CharField(max_length=20, verbose_name="Telefon")
+# class Cart(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     buyer = models.ForeignKey(User)
+#     item_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+#     phone_number = models.CharField(max_length=20, verbose_name="Telefon")
