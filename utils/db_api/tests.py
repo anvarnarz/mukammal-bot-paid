@@ -29,7 +29,7 @@ async def test():
 
     #### Mahsulotlar uchun test
     print("Products jadvalini yaratamiz...")
-    await db.drop_products()
+    # await db.drop_products()
     await db.create_table_products()
     await db.add_product(
         "food",
