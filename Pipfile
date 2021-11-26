@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 aiogram = "~=2.14"
 environs = "~=8.0.0"
+wikipedia = "*"
 
 [dev-packages]
 
