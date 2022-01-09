@@ -29,7 +29,7 @@ class Database:
 
     def create_table_users(self):
         sql = """
-        CREATE TABLE Users (
+        CREATE TABLE IF NOT EXISTS Users (
             id int NOT NULL,
             Name varchar(255) NOT NULL,
             email varchar(255),
