@@ -1,5 +1,7 @@
 from sqlalchemy import insert, select, update
 
+from Repos import BaseSQLAlchemyRepo
+
 class UserRepo(BaseSQLAlchemyRepo):
     model = User
 
