@@ -23,4 +23,3 @@ async def send_picture(msg: Message):
 @dp.message_handler(text = "Boshiga")
 async def send_link(msg: Message):
     await msg.answer("Kurslarni tanlang",reply_markup=menu)
-@dp.message_handler(commands = "start")
