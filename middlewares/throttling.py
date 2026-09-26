@@ -33,5 +33,7 @@ class ThrottlingMiddleware(BaseMiddleware):
             raise CancelHandler()
 
     async def message_throttled(self, message: types.Message, throttled: Throttled):
+        if message.chat.type != "private":
+            return
         if throttled.exceeded_count <= 2:
             await message.reply("Too many requests!")
